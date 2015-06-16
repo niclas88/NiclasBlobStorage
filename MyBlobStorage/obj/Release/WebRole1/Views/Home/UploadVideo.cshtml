@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "UploadVideo";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <center><h2>Upload Video</h2></center>
+
+            <div>
+                @using (Html.BeginForm("UploadVideo", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <input style="padding-bottom:2px" type="file" name="Video" />
+                    <input type="submit" name="Upload" />
+                }
+                </div>
+           </div>
+       </div>
+            <div class="row" style="padding-top:30px;">
+                <div class="col-md-12">
+
+                    <ul class="list-group" ; padding-top:20px;">
+                        @foreach (var item in Model)
+                        {
+                            <li class="list-group-item style=" display:block;">
+                                <span id="myFile">@item</span>
+                                <ul style="display:inline;">
+                                    <li class="dropdown">
+                                        <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+
+                                            <span class="glyphicon glyphicon-wrench"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <li id="@item" role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="(GetVideo('@item'))" data-toggle="modal" data-target="#myModal">View <span class=" glyphicon glyphicon-film"></span></a></li>
+                                            <li id="@item" role="presentation"><a role="menuitem" tabindex="-1" href="@item">Download <span class="glyphicon glyphicon-download"></span></a></li>
+                                            <li id="@item" role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="deleteVideo('@item');">Delete <span class="glyphicon glyphicon-remove"></span></a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                        <video class="embed-responsive" width="500" height="400" id="myVideo" preload controls>
+                                            <source src="" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+                                            <source src="" type='video/ogg; codecs="theora, vorbis"' />
+                                            <source src="" type='video/webm; codecs="vp8, vorbis"' />
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script>
+            function deleteVideo(item) {
+                var url = "/Home/DeleteVideo";
+                $.post(url, { name: item }, function (data) {
+                    window.location.href = "/Home/UploadVideo";
+                });
+            }
+
+            function GetVideo(video) {
+                var url = video;
+
+                $("#myVideo").attr("src", url);
+            }
+
+            function GetFileName(file) {
+                var fileName = file.substr(53);
+                console.log(fileName);
+                document.getElementById("myFile").innerHTML = fileName;
+            }
+        </script>
+
